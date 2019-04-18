@@ -4,33 +4,54 @@ import Vue from 'vue'
 Vue.use(Router)
 
 const router = new Router({
-	routes: [
-            {
-            	path: '/',
-            	name: '/',
-            	redirect: '/total'
-            },
-            {
-            	path: '/total',
-            	name: 'total',
-            	component: resolve => require(['@/components/total'], resolve)
-            },
-            {
-                path: '/router1',
-                name: 'router1',
-                component: resolve => require(['@/components/router1'], resolve)
-            },
-            {
-                path: '/router2',
-                name: 'router2',
-                component: resolve => require(['@/components/router2'], resolve)
-            },
-            {
-                path: '/router3',
-                name: 'router3',
-                component: resolve => require(['@/components/router3'], resolve)
-            }
-	]
+  routes: [
+    {
+      path: '/',
+      name: '/',
+      redirect: to => '/index'
+    },
+    {
+      path: '/index',
+      name: 'index',
+      alias: '/balabala',
+      component: resolve => require(['@/routes/index'], resolve)
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: resolve => require(['@/routes/about'], resolve),
+      children: [
+        {
+          path: 'one',
+          name: 'about-one',
+          meta: {
+            title: 'about one'
+          },
+          component: resolve => require(['@/routes/about-one'], resolve)
+        },
+        {
+          path: 'two',
+          name: 'about-two',
+          component: resolve => require(['@/routes/about-two'], resolve)
+        }
+      ]
+    },
+    {
+      path: '/other/:id',
+      name: 'other',
+      props: route => ({
+        route: route
+      }),
+      component: resolve => require(['@/routes/other'], resolve)
+    },
+    // 匹配页面不存在的路由，显示404页面
+    {
+      path: '*',
+      name: 'all',
+      component: resolve => require(['@/routes/error'], resolve)
+    },
+  ]
 })
+
 
 export default router
